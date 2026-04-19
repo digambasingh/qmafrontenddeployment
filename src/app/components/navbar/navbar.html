@@ -1,0 +1,38 @@
+<nav class="navbar" id="main-navbar">
+  <a routerLink="/" class="navbar-brand" id="brand-link">
+    <span class="brand-icon">📐</span>
+    <span class="brand-text">Quanment</span>
+  </a>
+  <div class="navbar-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link" id="nav-home">
+      Home
+    </a>
+
+    @if (authService.isAuthenticated()) {
+      <a routerLink="/history" routerLinkActive="active" class="nav-link" id="nav-history">
+        History
+      </a>
+      <a routerLink="/profile" routerLinkActive="active" class="nav-link" id="nav-profile">
+        Profile
+      </a>
+      <div class="nav-user">
+        <span class="user-avatar">{{ authService.currentUser()!.firstName.charAt(0).toUpperCase() }}</span>
+        <button class="logout-btn" id="logout-btn" (click)="logout()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="16,17 21,12 16,7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Logout
+        </button>
+      </div>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active" class="nav-link nav-link--accent" id="nav-login">
+        Login
+      </a>
+      <a routerLink="/signup" routerLinkActive="active" class="nav-link nav-link--primary" id="nav-signup">
+        Sign Up
+      </a>
+    }
+  </div>
+</nav>

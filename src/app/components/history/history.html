@@ -1,0 +1,83 @@
+<section class="history-page" id="history-page">
+  <div class="history-header">
+    <div>
+      <h1 class="history-title">Conversion History</h1>
+      <p class="history-subtitle">Your recent operations from the server</p>
+    </div>
+    @if (records().length > 0) {
+      <button class="refresh-btn" id="refresh-history" (click)="loadHistory()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <polyline points="23,4 23,10 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Refresh
+      </button>
+    }
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-state" id="loading-history">
+      <span class="spinner-lg"></span>
+      <p class="loading-text">Loading history...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage() && !isLoading()) {
+    <div class="error-state" id="history-error">
+      <span class="error-icon">⚠️</span>
+      <h2 class="error-title">Something went wrong</h2>
+      <p class="error-text">{{ errorMessage() }}</p>
+      <button class="retry-btn" (click)="loadHistory()">Try Again</button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading() && !errorMessage() && records().length === 0) {
+    <div class="empty-state" id="empty-history">
+      <span class="empty-icon">📋</span>
+      <h2 class="empty-title">No conversions yet</h2>
+      <p class="empty-text">Start converting units to see your history here.</p>
+    </div>
+  }
+
+  <!-- History List -->
+  @if (!isLoading() && !errorMessage() && records().length > 0) {
+    <div class="history-list" id="history-list">
+      @for (record of records(); track record.id) {
+        <div class="history-card" [id]="'record-' + record.id">
+          <div class="card-icon">{{ getIcon(record.thisMeasurementType) }}</div>
+          <div class="card-body">
+            <div class="card-conversion">
+              <span class="card-value">{{ record.thisValue }}</span>
+              <span class="card-unit">{{ record.thisUnit }}</span>
+
+              @if (record.thatValue !== null && record.thatValue !== undefined) {
+                <span class="card-op-badge">{{ formatOperation(record.operation) }}</span>
+                <span class="card-value">{{ record.thatValue }}</span>
+                <span class="card-unit">{{ record.thatUnit }}</span>
+              }
+
+              <span class="card-arrow">→</span>
+
+              @if (record.error) {
+                <span class="card-error">{{ record.errorMessage }}</span>
+              } @else {
+                <span class="card-value result">{{ record.resultValue }}</span>
+                @if (record.resultUnit) {
+                  <span class="card-unit">{{ record.resultUnit }}</span>
+                }
+              }
+            </div>
+            <div class="card-meta">
+              <span class="card-type">{{ formatType(record.thisMeasurementType) }}</span>
+              <span class="card-op">{{ formatOperation(record.operation) }}</span>
+              <span class="card-time">{{ record.createdAt | date: 'MMM d, y • h:mm a' }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>

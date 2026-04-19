@@ -1,0 +1,5 @@
+/* App-level styles — kept minimal, global tokens are in styles.css */
+:host {
+  display: block;
+  min-height: 100vh;
+}
